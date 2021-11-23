@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>mailbox.txt</file>
+        <file>images/down.png</file>
+        <file>images/forward.png</file>
+        <file>images/options.png</file>
+        <file>images/reply.png</file>
+        <file>images/settings.png</file>
+        <file>images/tag.png</file>
+        <file>images/trash.png</file>
+        <file>images/up.png</file>
+        <file>images/write.png</file>
+    </qresource>
+</RCC>
