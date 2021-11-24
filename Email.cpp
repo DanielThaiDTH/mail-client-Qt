@@ -220,7 +220,10 @@ void Email::setReceiveDate(const std::string& receive_date)
 
 std::string Email::getReceiveDate() const
 {
-    return receiveDate->getDateTimeString();
+    if (receiveDate)
+        return receiveDate->getDateTimeString();
+    else
+        return sendDate ? sendDate->getDateTimeString() : "";
 }
 
 
@@ -268,15 +271,11 @@ bool Email::operator<(const Email& other) const
                && date->getDay() < other.receiveDate->getDay()) {
         return true;
     } else if (date->getYear() == other.receiveDate->getYear() && date->getMonth() == other.receiveDate->getMonth()
-               && date->getDay() == other.receiveDate->getDay() && date->getDay() < other.receiveDate->getDay()) {
+               && date->getDay() == other.receiveDate->getDay() && date->getHour() < other.receiveDate->getHour()) {
         return true;
     } else if (date->getYear() == other.receiveDate->getYear() && date->getMonth() == other.receiveDate->getMonth()
-               && date->getDay() == other.receiveDate->getDay() && date->getDay() == other.receiveDate->getDay()
-               && date->getHour() < other.receiveDate->getHour()) {
-        return true;
-    } else if (date->getYear() == other.receiveDate->getYear() && date->getMonth() == other.receiveDate->getMonth()
-               && date->getDay() == other.receiveDate->getDay() && date->getDay() == other.receiveDate->getDay()
-               && date->getHour() == other.receiveDate->getHour() && date->getMinute() < other.receiveDate->getMinute()) {
+               && date->getDay() == other.receiveDate->getDay() && date->getHour() == other.receiveDate->getHour()
+               && date->getMinute() < other.receiveDate->getMinute()) {
         return true;
     } else {
         return false;
@@ -295,8 +294,8 @@ bool Email::operator==(const Email &other) const
     const DateTime* date = this->receiveDate;
 
     return date->getYear() == other.receiveDate->getYear() && date->getMonth() == other.receiveDate->getMonth()
-            && date->getDay() == other.receiveDate->getDay() && date->getDay() == other.receiveDate->getDay()
-            && date->getHour() == other.receiveDate->getHour() && date->getMinute() == other.receiveDate->getMinute();
+            && date->getDay() == other.receiveDate->getDay() && date->getHour() == other.receiveDate->getHour()
+            && date->getMinute() == other.receiveDate->getMinute();
 }
 
 

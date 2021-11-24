@@ -10,14 +10,7 @@
 #include <QMap>
 #include <QString>
 
-struct MailSummary
-{
-  int id;
-  bool read;
-  QString subject;
-  QString sender;
-  QString receiveDate;
-};
+struct MailSummary;
 
 class Inbox : public QObject
 {
@@ -52,12 +45,33 @@ public:
     Inbox(std::vector<Email*>&& msgs);
     ~Inbox();
     void sortByDate(QVector<MailData>& vec);
-    QVector<MailSummary> getInboxSummary() const;
-    QVector<MailSummary> getTrashSummary() const;
+    QVector<MailSummary> getInboxSummary();
+    QVector<MailSummary> getTrashSummary();
     const MailData& getMailData(int id) const;
     const MailData& getTrashData(int id) const;
     void moveToTrash(int id);
     void restoreMail(int id);
 };
 
+
+/**
+ * @brief Contains summary data for the inbox view items. Stores a bool pointer that
+ * refers to a bool in a MailData object, which indicates if a mail is read or not.
+ */
+struct MailSummary
+{
+  int id;
+  bool* read = nullptr;
+  QString subject;
+  QString sender;
+  QString receiveDate;
+  void setSummary(Inbox::MailData& data)
+  {
+      this->read = &data.read;
+      this->id = data.id;
+      sender = QString::fromStdString(data.mail->getFromAddress());
+      subject = QString::fromStdString(data.mail->getSubject());
+      receiveDate = QString::fromStdString(data.mail->getReceiveDate());
+  }
+};
 #endif // INBOX_H

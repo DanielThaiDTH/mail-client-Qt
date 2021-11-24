@@ -6,7 +6,7 @@ MailContent::MailContent(QWidget* parent) : QFrame(parent)
     id = -1;
     subject = new QLabel("Subject");
     date = new QLabel("Date");
-    from = new QLabel("From; ");
+    from = new QLabel("From: ");
     to = new QLabel("To: ");
     attachment_frame = new QFrame();
     responses = nullptr;
@@ -103,11 +103,13 @@ void MailContent::setContent(const Inbox::MailData& data)
 
         layout->insertWidget(6 + attached_cnt, responses);
         QLayout* resp_layout = new QVBoxLayout();
+        resp_layout->setSizeConstraint(QLayout::SetMinAndMaxSize);
         const std::vector<Email>& resp_mails = data.mail->getResponseMails();
         for (auto i = 0u; i < resp_mails.size(); i++) {
             std::string text = "To: "  + resp_mails[i].getToAddress() + "\n"
-                    + "From: " + resp_mails[i].getFromAddress() + "\n\n"
-                    + resp_mails[i].getContent() + "\n";
+                    + "From: " + resp_mails[i].getFromAddress() + "\n"
+                    + resp_mails[i].getReceiveDate() + "\n\n"
+                    + resp_mails[i].getContent() + "\n\n";
             QLabel* responseText = new QLabel(QString::fromStdString(text));
             responseText->setWordWrap(true);
             resp_layout->addWidget(responseText);
@@ -116,9 +118,33 @@ void MailContent::setContent(const Inbox::MailData& data)
             //std::cout << responseText->text().toStdString() << " out " << std::endl;
         }
 
-        responses->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
+        responses->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
         responses->setStyleSheet(" * { background-color: white; border-style: none; color: black; margin: 0px; }");
 
         responses->setContentLayout(resp_layout);
     }
+}
+
+
+void MailContent::clearContents()
+{
+    id = -1;
+    subject->setText("Subject");
+    date->setText("Date");
+    from->setText("From: ");
+    to->setText("To: ");
+
+    for (auto i = 0u; i < attachments.size(); i++) {
+        attachment_layout->removeWidget(attachments[i]);
+        delete attachments[i];
+    }
+    attachments.clear();
+    attachment_frame->hide();
+
+    layout->removeWidget(responses);
+    if (responses != nullptr)
+        delete responses;
+    responses = nullptr;
+
+    text->setText("");
 }

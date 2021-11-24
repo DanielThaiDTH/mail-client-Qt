@@ -28,9 +28,18 @@ SendDialog::SendDialog(QWidget *parent) :
     connect(ui->bcc_button, &QAbstractButton::clicked, this, &SendDialog::bccClicked);
 }
 
+
 SendDialog::~SendDialog()
 {
     delete ui;
+}
+
+
+void SendDialog::setReplyMode(const Inbox::MailData& data)
+{
+    ui->to_edit->setText(QString::fromStdString(data.mail->getFromAddress()));
+    ui->to_edit->setReadOnly(true);
+    ui->subject_edit->setText("Re: " + QString::fromStdString(data.mail->getSubject()));
 }
 
 

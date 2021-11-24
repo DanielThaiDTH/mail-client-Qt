@@ -35,6 +35,7 @@ public:
     MailContent(QWidget* parent = nullptr);
     ~MailContent();
     void setContent(const Inbox::MailData& mail);
+    void clearContents();
 };
 
 #endif // MAILCONTENT_H

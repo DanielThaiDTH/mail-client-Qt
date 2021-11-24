@@ -2,6 +2,8 @@
 #define SENDDIALOG_H
 
 #include <QDialog>
+#include "inbox.h"
+#include "Email.h"
 
 namespace Ui {
 class SendDialog;
@@ -15,6 +17,7 @@ class SendDialog : public QDialog
 public:
     explicit SendDialog(QWidget *parent = nullptr);
     ~SendDialog();
+    void setReplyMode(const Inbox::MailData& mail);
 
 public slots:
     void bccClicked();

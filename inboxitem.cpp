@@ -1,6 +1,6 @@
 #include "inboxitem.h"
 
-InboxItem::InboxItem(int id, bool read, QString subject, QString sender, QWidget* parent) : QFrame(parent)
+InboxItem::InboxItem(int id, bool* read, QString subject, QString sender, QWidget* parent) : QFrame(parent)
 {
     this->setObjectName("inbox-item");
     mail_id = id;
@@ -18,7 +18,7 @@ InboxItem::InboxItem(int id, bool read, QString subject, QString sender, QWidget
     subject_label = new QLabel(this->subject, this);
     subject_label->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Fixed);
 
-    if (isRead)
+    if (*isRead)
         subject_label->setStyleSheet(subjectReadStyle);
     else
         subject_label->setStyleSheet(subjectUnreadStyle);
@@ -79,6 +79,8 @@ void InboxItem::checkChanged(int value)
 void InboxItem::mousePressEvent(QMouseEvent* e)
 {
     if (rect().contains(e->pos())) {
+        *isRead = true;
+        subject_label->setStyleSheet(subjectReadStyle);
         emit mailClicked(mail_id);
     }
 }

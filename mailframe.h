@@ -9,6 +9,7 @@
 #include <QHBoxLayout>
 #include <QGridLayout>
 #include <QScrollArea>
+#include <QAction>
 #include "mailcontent.h"
 
 class MailFrame : public QFrame
@@ -32,12 +33,33 @@ class MailFrame : public QFrame
     QPushButton* prev_button;
     QPushButton* next_button;
 
+    QAction* reply_act;
+    QAction* forward_act;
+    QAction* next_act;
+    QAction* prev_act;
+
+    int mail_id;
+
 public:
     MailFrame(QWidget* parent = nullptr);
     ~MailFrame();
 
 public slots:
     void updateContent(const Inbox::MailData& data);
+    void replyHandle();
+    void forwardHandle();
+    void tagHandle();
+    void trashHandle();
+    void nextHandle();
+    void prevHandle();
+
+signals:
+    void replyTo(int id);
+    void forwardMail(int id);
+    void tagClicked(int id);
+    void mailTrashed(int id);
+    void nextMail(int id);
+    void prevMail(int id);
 };
 
 #endif // MAILFRAME_H

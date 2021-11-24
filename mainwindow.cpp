@@ -63,6 +63,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->writeMailButton, &QAbstractButton::clicked, this, &MainWindow::writeClicked);
     connect(inbox_disp, &InboxDisplay::mailSelected, this, &MainWindow::itemClicked);
     connect(this, &MainWindow::newMailContent, mail_frame, &MailFrame::updateContent);
+    connect(mail_frame, &MailFrame::mailTrashed, this, &MainWindow::trashMail);
+    connect(mail_frame, &MailFrame::replyTo, this, &MainWindow::openReplyDialog);
+    connect(mail_frame, &MailFrame::forwardMail, this, &MainWindow::openForwardDialog);
 }
 
 
@@ -94,4 +97,33 @@ void MainWindow::itemClicked(int id)
 {
     const Inbox::MailData& data = inbox->getMailData(id);
     emit newMailContent(data);
+}
+
+
+void MainWindow::trashMail(int id)
+{
+    inbox->moveToTrash(id);
+    inbox_disp->setInbox(inbox->getInboxSummary());
+}
+
+
+void MainWindow::openReplyDialog(int id)
+{
+    if (id < 0)
+        return;
+
+    SendDialog* send_window = new SendDialog(this);
+    send_window->setReplyMode(inbox->getMailData(id));
+
+    send_window->exec();
+}
+
+void MainWindow::openForwardDialog(int id)
+{
+    if (id < 0)
+        return;
+
+    ForwardDialog* for_window = new ForwardDialog(inbox->getMailData(id), this);
+
+    for_window->exec();
 }

@@ -23,7 +23,10 @@ Inbox::Inbox(std::vector<Email*>&& msgs) : QObject()
     sortByDate(inbox_mail);
 }
 
-
+/**
+ * @brief Inbox::~Inbox, The destructor handles the end of life of the
+ * email objects.
+ */
 Inbox::~Inbox()
 {
     for (MailData& mail_data : inbox_mail) {
@@ -113,17 +116,13 @@ int Inbox::partition(QVector<MailData> &arr, int low, int high)
 }
 
 
-QVector<MailSummary> Inbox::getInboxSummary() const
+QVector<MailSummary> Inbox::getInboxSummary()
 {
     QVector<MailSummary> inbox_summary;
 
-    for (auto it = inbox_mail.constBegin(); it != inbox_mail.constEnd(); ++it) {
+    for (auto it = inbox_mail.begin(); it != inbox_mail.end(); ++it) {
         MailSummary sum;
-        sum.id = it->id;
-        sum.read = it->read;
-        sum.sender = QString::fromStdString(it->mail->getFromAddress());
-        sum.subject = QString::fromStdString(it->mail->getSubject());
-        sum.receiveDate = QString::fromStdString(it->mail->getReceiveDate());
+        sum.setSummary(*it);
         inbox_summary.push_back(sum);
     }
 
@@ -131,17 +130,13 @@ QVector<MailSummary> Inbox::getInboxSummary() const
 }
 
 
-QVector<MailSummary> Inbox::getTrashSummary() const
+QVector<MailSummary> Inbox::getTrashSummary()
 {
     QVector<MailSummary> trash_summary;
 
-    for (auto it = trash_mail.constBegin(); it != trash_mail.constEnd(); ++it) {
+    for (auto it = trash_mail.begin(); it != trash_mail.end(); ++it) {
         MailSummary sum;
-        sum.id = it->id;
-        sum.read = it->read;
-        sum.sender = QString::fromStdString(it->mail->getFromAddress());
-        sum.subject = QString::fromStdString(it->mail->getSubject());
-        sum.receiveDate = QString::fromStdString(it->mail->getReceiveDate());
+        sum.setSummary(*it);
         trash_summary.push_back(sum);
     }
 

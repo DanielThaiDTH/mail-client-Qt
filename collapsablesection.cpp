@@ -12,10 +12,9 @@ CollapsableSection::CollapsableSection(const QString & title, QWidget* parent)
     mainLayout->setAlignment(Qt::AlignLeft);
     content->setFrameShape(QFrame::Box);
 
-    toggleButton->setStyleSheet("QPushButton { border: none; font-weight: bold; }");
+    toggleButton->setStyleSheet("* { border: none; font-weight: bold; text-align: left; color: blue; }");
     toggleButton->setCheckable(true);
     toggleButton->setChecked(false);
-    toggleButton->setStyleSheet("text-align: left;");
 
     contentArea->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     content->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
@@ -45,13 +44,15 @@ void CollapsableSection::toggle(bool collapsed) {
         contentArea->setMinimumHeight(250);
         content->setMinimumHeight(200);
         content->setMinimumWidth(300);
+        contentArea->show();
     } else {
         this->setMaximumHeight(38);
         this->setMinimumHeight(38);
-        content->setMinimumHeight(0);
-        content->setMaximumHeight(0);
-        contentArea->setMinimumHeight(0);
-        contentArea->setMaximumHeight(0);
+        contentArea->hide();
+        //content->setMinimumHeight(0);
+        //content->setMaximumHeight(0);
+        //contentArea->setMinimumHeight(0);
+        //contentArea->setMaximumHeight(0);
     }
 }
 

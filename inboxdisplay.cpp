@@ -18,6 +18,11 @@ InboxDisplay::~InboxDisplay(){
 
 void InboxDisplay::setInbox(const QVector<MailSummary>& summary)
 {
+    for (InboxItem* item : *mails) {
+        layout->removeWidget(item);
+        delete item;
+    }
+
     delete mails;
     mails = new QVector<InboxItem*>();
 

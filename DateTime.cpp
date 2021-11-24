@@ -21,9 +21,9 @@ std::vector<std::string> DateTime::string_split(std::string str, char delim, int
     std::vector<size_t> delims_pos;
     for (int i = 0; i < count - 1; i++) {
         if (i == 0)
-            delims_pos.push_back(str.find_first_of(' '));
+            delims_pos.push_back(str.find_first_of(delim));
         else
-            delims_pos.push_back(str.find_first_of(' ', delims_pos[i-1] + 1));
+            delims_pos.push_back(str.find_first_of(delim, delims_pos[i-1] + 1));
     }
 
     std::vector<std::string> split_vec;

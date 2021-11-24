@@ -10,6 +10,7 @@
 #include "inboxdisplay.h"
 #include "mailframe.h"
 #include "senddialog.h"
+#include "forwarddialog.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -38,11 +39,21 @@ public slots:
      * @brief writeClicked, creates a send mail dialog.
      */
     void writeClicked();
+
     /**
      * @brief itemClicked, triggers newMailContent, sending the mail data with the matching id.
      * @param id
      */
     void itemClicked(int id);
+
+    /**
+     * @brief trashMail, moves the mail identified by the given id to the trash.
+     * @param id
+     */
+    void trashMail(int id);
+
+    void openReplyDialog(int id);
+    void openForwardDialog(int id);
 
 signals:
     void newMailContent(const Inbox::MailData& data);
