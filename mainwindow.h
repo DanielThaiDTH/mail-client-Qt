@@ -35,7 +35,10 @@ class MainWindow : public QMainWindow
     QAction* make_search;
 
     QString inactiveBoxStyle = "* { margin: 10px; color: #707070; } *:hover { text-decoration: underline; }";
-    QString activeBoxStyle = "QPushButton { color: #CF4F1F; }";
+    QString activeBoxStyle = "QPushButton { margin: 10px; color: #CF4F1F; }";
+
+    void changeBox(BoxType type);
+    void resetButtonStyles();
 
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -60,10 +63,24 @@ public slots:
      */
     void trashMail(int id);
 
+    /**
+     * @brief searchEntered, calls the Inbox search function and sets the
+     * inbox display to the search results.
+     */
     void searchEntered();
+
+    /**
+     * @brief removeSearch, clears the search field and sets the inbox
+     * display to the active inbox.
+     */
     void removeSearch();
     void openReplyDialog(int id);
     void openForwardDialog(int id);
+    void inboxSelected();
+    void sentSelected();
+    void draftSelected();
+    void trashSelected();
+    void junkSelected();
 
 signals:
     void newMailContent(const Inbox::MailData& data);

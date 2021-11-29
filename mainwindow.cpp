@@ -75,6 +75,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->lineEdit, &QLineEdit::returnPressed, this, &MainWindow::searchEntered);
     connect(clear_search, &QAction::triggered, this, &MainWindow::removeSearch);
     connect(make_search, &QAction::triggered, this, &MainWindow::searchEntered);
+
+    connect(ui->inbox_button, &QAbstractButton::clicked, this, &MainWindow::inboxSelected);
+    connect(ui->sent_button, &QAbstractButton::clicked, this, &MainWindow::sentSelected);
+    connect(ui->draft_button, &QAbstractButton::clicked, this, &MainWindow::draftSelected);
+    connect(ui->trash_button, &QAbstractButton::clicked, this, &MainWindow::trashSelected);
+    connect(ui->junk_button, &QAbstractButton::clicked, this, &MainWindow::junkSelected);
 }
 
 
@@ -110,6 +116,23 @@ void MainWindow::setInbox(Inbox *ib)
         ui->draft_button->setStyleSheet(activeBoxStyle);
         break;
     }
+}
+
+
+void MainWindow::resetButtonStyles()
+{
+    ui->inbox_button->setStyleSheet(inactiveBoxStyle);
+    ui->draft_button->setStyleSheet(inactiveBoxStyle);
+    ui->sent_button->setStyleSheet(inactiveBoxStyle);
+    ui->tags_button->setStyleSheet(inactiveBoxStyle);
+    ui->junk_button->setStyleSheet(inactiveBoxStyle);
+    ui->trash_button->setStyleSheet(inactiveBoxStyle);
+}
+
+void MainWindow::changeBox(BoxType type)
+{
+    inbox->setActiveBox(type);
+    inbox_disp->setInbox(inbox->getInboxSummary());
 }
 
 
@@ -171,4 +194,39 @@ void MainWindow::removeSearch()
 {
     ui->lineEdit->setText("");
     inbox_disp->setInbox(inbox->getInboxSummary());
+}
+
+void MainWindow::inboxSelected()
+{
+    resetButtonStyles();
+    changeBox(BoxType::INBOX);
+    ui->inbox_button->setStyleSheet(activeBoxStyle);
+}
+
+void MainWindow::sentSelected()
+{
+    resetButtonStyles();
+    changeBox(BoxType::SENT);
+    ui->sent_button->setStyleSheet(activeBoxStyle);
+}
+
+void MainWindow::draftSelected()
+{
+    resetButtonStyles();
+    changeBox(BoxType::DRAFT);
+    ui->draft_button->setStyleSheet(activeBoxStyle);
+}
+
+void MainWindow::trashSelected()
+{
+    resetButtonStyles();
+    changeBox(BoxType::TRASH);
+    ui->trash_button->setStyleSheet(activeBoxStyle);
+}
+
+void MainWindow::junkSelected()
+{
+    resetButtonStyles();
+    changeBox(BoxType::JUNK);
+    ui->junk_button->setStyleSheet(activeBoxStyle);
 }
