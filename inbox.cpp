@@ -1,6 +1,7 @@
 #include "inbox.h"
 #include <utility>
 #include <algorithm>
+#include <cstring>
 
 int Inbox::MailData::id_generator = 0;
 
@@ -20,6 +21,8 @@ Inbox::Inbox(std::vector<Email*>&& msgs) : QObject()
         mail_ptr = nullptr;
     }
 
+    activeBox = BoxType::INBOX;
+
     sortByDate(inbox_mail);
 }
 
@@ -36,6 +39,24 @@ Inbox::~Inbox()
     }
 
     for (MailData& mail_data : trash_mail) {
+        if (mail_data.mail != nullptr)
+            delete mail_data.mail;
+        mail_data.mail = nullptr;
+    }
+
+    for (MailData& mail_data : junk_mail) {
+        if (mail_data.mail != nullptr)
+            delete mail_data.mail;
+        mail_data.mail = nullptr;
+    }
+
+    for (MailData& mail_data : draft_mail) {
+        if (mail_data.mail != nullptr)
+            delete mail_data.mail;
+        mail_data.mail = nullptr;
+    }
+
+    for (MailData& mail_data : sent_mail) {
         if (mail_data.mail != nullptr)
             delete mail_data.mail;
         mail_data.mail = nullptr;
@@ -116,11 +137,39 @@ int Inbox::partition(QVector<MailData> &arr, int low, int high)
 }
 
 
+QVector<Inbox::MailData>* Inbox::selectBox()
+{
+    QVector<MailData>* box;
+
+    switch (activeBox) {
+    case BoxType::INBOX:
+        box = &inbox_mail;
+        break;
+    case BoxType::TRASH:
+        box = &trash_mail;
+        break;
+    case BoxType::JUNK:
+        box = &junk_mail;
+        break;
+    case BoxType::SENT:
+        box = &sent_mail;
+        break;
+    case BoxType::DRAFT:
+        box = &draft_mail;
+        break;
+    }
+
+    return box;
+}
+
+
 QVector<MailSummary> Inbox::getInboxSummary()
 {
     QVector<MailSummary> inbox_summary;
 
-    for (auto it = inbox_mail.begin(); it != inbox_mail.end(); ++it) {
+    QVector<MailData>* box = selectBox();
+
+    for (auto it = box->begin(); it != box->end(); ++it) {
         MailSummary sum;
         sum.setSummary(*it);
         inbox_summary.push_back(sum);
@@ -144,17 +193,21 @@ QVector<MailSummary> Inbox::getTrashSummary()
 }
 
 
-const Inbox::MailData& Inbox::getMailData(int id) const
+const Inbox::MailData& Inbox::getMailData(int id)
 {
-    auto getByID = [&](const MailData& d){ return d.id == id; };
-    return *std::find_if(inbox_mail.begin(), inbox_mail.end(), getByID);
+    auto getByID = [&](MailData& d){ return d.id == id; };
+    auto data = std::find_if(inbox_mail.begin(), inbox_mail.end(), getByID);
+    data->read = true;
+    return *data;
 }
 
 
-const Inbox::MailData& Inbox::getTrashData(int id) const
+const Inbox::MailData& Inbox::getTrashData(int id)
 {
-    auto getByID = [&](const MailData& d){ return d.id == id; };
-    return *std::find_if(trash_mail.begin(), trash_mail.end(), getByID);
+    auto getByID = [&](MailData& d){ return d.id == id; };
+    auto data = std::find_if(trash_mail.begin(), trash_mail.end(), getByID);
+    data->read = true;
+    return *data;
 }
 
 
@@ -201,4 +254,87 @@ void Inbox::restoreMail(int id)
 }
 
 
+void Inbox::addEmail(Email *mail)
+{
+    switch (activeBox) {
+    case BoxType::INBOX:
+        inbox_mail.push_back(MailData(mail));
+        sortByDate(inbox_mail);
+        break;
+    case BoxType::TRASH:
+        trash_mail.push_back(MailData(mail));
+        sortByDate(trash_mail);
+        break;
+    case BoxType::JUNK:
+        junk_mail.push_back(MailData(mail));
+        sortByDate(junk_mail);
+        break;
+    case BoxType::SENT:
+        sent_mail.push_back(MailData(mail));
+        sortByDate(sent_mail);
+        break;
+    case BoxType::DRAFT:
+        draft_mail.push_back(MailData(mail));
+        sortByDate(draft_mail);
+        break;
+    }
+}
 
+
+void Inbox::addEmail(Email *mail, BoxType type)
+{
+    BoxType originalType = activeBox;
+    activeBox = type;
+    addEmail(mail);
+    activeBox = originalType;
+}
+
+
+std::string Inbox::toUpper(std::string s)
+{
+    std::transform(s.begin(), s.end(), s.begin(), [](char c){ return std::toupper(c); });
+    return s;
+}
+
+
+/**
+ * @brief Inbox::search, searches on the subject field of the mail. The box
+ * searched is the active box.
+ * @param query
+ * @return QVector<MailSummary>
+ */
+QVector<MailSummary> Inbox::search(const QString &query)
+{
+    std::string search_query = query.toStdString();
+
+    auto search_expr = [&](const MailData& data){
+        auto size = toUpper(data.mail->getSubject()).find(toUpper(search_query));
+        return size != std::string::npos;
+    };
+
+    auto to_summary = [](MailData& data) {
+        MailSummary sum;
+        sum.setSummary(data);
+        return sum;
+    };
+
+    QVector<MailData> found;
+    QVector<MailData>* box = selectBox();
+    QVector<MailSummary> search_results;
+
+    std::copy_if(box->begin(), box->end(), std::back_inserter(found), search_expr);
+    std::transform(found.begin(), found.end(), std::back_inserter(search_results), to_summary);
+
+    return search_results;
+}
+
+
+BoxType Inbox::getActiveBox() const
+{
+    return activeBox;
+}
+
+void Inbox::setActiveBox(BoxType type)
+{
+    activeBox = type;
+}

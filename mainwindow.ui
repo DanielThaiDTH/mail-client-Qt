@@ -103,9 +103,12 @@
      <item>
       <layout class="QHBoxLayout" name="hLayoutBottom" stretch="0,1">
        <item>
-        <layout class="QVBoxLayout" name="vLayoutSide">
+        <layout class="QVBoxLayout" name="vLayoutSide" stretch="0,0,0,0,0,0">
          <property name="spacing">
-          <number>20</number>
+          <number>0</number>
+         </property>
+         <property name="sizeConstraint">
+          <enum>QLayout::SetDefaultConstraint</enum>
          </property>
          <property name="leftMargin">
           <number>50</number>
@@ -114,11 +117,11 @@
           <number>50</number>
          </property>
          <item>
-          <widget class="QLabel" name="inbox_label">
+          <widget class="QPushButton" name="inbox_button">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
              <horstretch>0</horstretch>
-             <verstretch>1</verstretch>
+             <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="font">
@@ -129,55 +132,43 @@
            <property name="text">
             <string>Inbox</string>
            </property>
-           <property name="alignment">
-            <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+           <property name="flat">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="draft_label">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
+          <widget class="QPushButton" name="draft_button">
            <property name="font">
             <font>
              <pointsize>15</pointsize>
             </font>
            </property>
            <property name="text">
-            <string>Draft</string>
+            <string>Drafts</string>
+           </property>
+           <property name="flat">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="sent_label">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
+          <widget class="QPushButton" name="sent_button">
            <property name="font">
             <font>
              <pointsize>15</pointsize>
             </font>
            </property>
            <property name="text">
-            <string>Sent</string>
+            <string>Sent Mail</string>
+           </property>
+           <property name="flat">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="tags_label">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
+          <widget class="QPushButton" name="tags_button">
            <property name="font">
             <font>
              <pointsize>15</pointsize>
@@ -186,32 +177,17 @@
            <property name="text">
             <string>Tags</string>
            </property>
+           <property name="flat">
+            <bool>true</bool>
+           </property>
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="junk_label">
+          <widget class="QPushButton" name="trash_button">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>15</pointsize>
-            </font>
-           </property>
-           <property name="text">
-            <string>Junk Mail</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="trash_label">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
-             <horstretch>0</horstretch>
-             <verstretch>2</verstretch>
             </sizepolicy>
            </property>
            <property name="font">
@@ -222,8 +198,23 @@
            <property name="text">
             <string>Trash</string>
            </property>
-           <property name="alignment">
-            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+           <property name="flat">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="junk_button">
+           <property name="font">
+            <font>
+             <pointsize>15</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Junk Mail</string>
+           </property>
+           <property name="flat">
+            <bool>true</bool>
            </property>
           </widget>
          </item>

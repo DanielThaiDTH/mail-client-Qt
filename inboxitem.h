@@ -15,7 +15,7 @@ class InboxItem : public QFrame
 {
     Q_OBJECT
     int mail_id;
-    bool* isRead;
+    bool isRead;
     bool selected;
     bool isHovered;
 
@@ -32,7 +32,7 @@ class InboxItem : public QFrame
     QHBoxLayout* layout;
 
 public:
-    InboxItem(int id, bool* read, QString subject, QString sender, QWidget* parent = nullptr);
+    InboxItem(int id, bool read, QString subject, QString sender, QWidget* parent = nullptr);
     ~InboxItem();
     void enterEvent(QEnterEvent* e) override;
     void leaveEvent(QEvent* e) override;

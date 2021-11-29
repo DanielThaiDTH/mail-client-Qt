@@ -14,7 +14,7 @@ ForwardDialog::ForwardDialog(const Inbox::MailData& data, QWidget *parent) :
     ok->setStyleSheet(OKStyle);
     QPushButton* cancel = ui->buttonBox->button(QDialogButtonBox::Cancel);
     cancel->setMinimumHeight(30);
-    cancel->setStyleSheet("* { border-radius: 3; font-size: 14px; background-color: #B0B0B0; border: 1px solid #707070; padding: 3px; } *:hover { background-color: gray; }");
+    cancel->setStyleSheet("* { border-radius: 3; font-size: 14px; background-color: white; font-weight: bold; border: 1px solid #707070; padding: 3px; } *:hover { background-color: #C0C0C0; }");
 
     ui->sender_label->setText(QString::fromStdString(data.mail->getFromAddress()));
     ui->subject_label->setText(QString::fromStdString(data.mail->getSubject()));

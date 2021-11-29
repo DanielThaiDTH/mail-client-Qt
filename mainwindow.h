@@ -6,6 +6,9 @@
 #include <QVBoxLayout>
 #include <QSplitter>
 #include <QScrollArea>
+#include <QLineEdit>
+#include <QMessageBox>
+#include <QAction>
 #include "inbox.h"
 #include "inboxdisplay.h"
 #include "mailframe.h"
@@ -28,6 +31,11 @@ class MainWindow : public QMainWindow
     QSplitter* splitter;
     QScrollArea* scrollArea;
     MailFrame* mail_frame;
+    QAction* clear_search;
+    QAction* make_search;
+
+    QString inactiveBoxStyle = "* { margin: 10px; color: #707070; } *:hover { text-decoration: underline; }";
+    QString activeBoxStyle = "QPushButton { color: #CF4F1F; }";
 
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -52,6 +60,8 @@ public slots:
      */
     void trashMail(int id);
 
+    void searchEntered();
+    void removeSearch();
     void openReplyDialog(int id);
     void openForwardDialog(int id);
 

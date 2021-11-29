@@ -10,5 +10,7 @@
         <file>images/trash.png</file>
         <file>images/up.png</file>
         <file>images/write.png</file>
+        <file>images/clear.png</file>
+        <file>images/search.png</file>
     </qresource>
 </RCC>

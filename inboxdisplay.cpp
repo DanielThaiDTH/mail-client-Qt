@@ -5,6 +5,7 @@ InboxDisplay::InboxDisplay(QWidget* parent) : QWidget(parent)
     mails = new QVector<InboxItem*>();
     layout = new QVBoxLayout();
     layout->setSpacing(0);
+    layout->setAlignment(Qt::AlignTop);
     this->setLayout(layout);
 }
 
@@ -20,7 +21,10 @@ void InboxDisplay::setInbox(const QVector<MailSummary>& summary)
 {
     for (InboxItem* item : *mails) {
         layout->removeWidget(item);
-        delete item;
+        if (item) {
+            disconnect(item, &InboxItem::mailClicked, this, &InboxDisplay::itemClicked);
+            delete item;
+        }
     }
 
     delete mails;
@@ -28,6 +32,8 @@ void InboxDisplay::setInbox(const QVector<MailSummary>& summary)
 
     for (const MailSummary& sum : summary) {
         InboxItem* temp = new InboxItem(sum.id, sum.read, sum.subject, sum.sender);
+        temp->setMaximumHeight(200);
+        temp->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         mails->push_back(temp);
         layout->addWidget(temp);
         connect(temp, &InboxItem::mailClicked, this, &InboxDisplay::itemClicked);

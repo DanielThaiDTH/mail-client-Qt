@@ -51,14 +51,20 @@ MainWindow::MainWindow(QWidget *parent)
     ui->layoutInbox->addWidget(splitter);
 
 
-    //ui->scrollArea->setWidget(inbox_frame);
+    //Setup mail box selection styles
+    ui->inbox_button->setStyleSheet(inactiveBoxStyle);
+    ui->draft_button->setStyleSheet(inactiveBoxStyle);
+    ui->sent_button->setStyleSheet(inactiveBoxStyle);
+    ui->tags_button->setStyleSheet(inactiveBoxStyle);
+    ui->junk_button->setStyleSheet(inactiveBoxStyle);
+    ui->trash_button->setStyleSheet(inactiveBoxStyle);
 
-    ui->inbox_label->setStyleSheet("* { margin: 10px; color: #707070; }");
-    ui->draft_label->setStyleSheet("* { margin: 10px; color: #707070; }");
-    ui->sent_label->setStyleSheet("* { margin: 10px; color: #707070; }");
-    ui->tags_label->setStyleSheet("* { margin: 10px; color: #707070; }");
-    ui->junk_label->setStyleSheet("* { margin: 10px; color: #707070; }");
-    ui->trash_label->setStyleSheet("* { margin: 10px; color: #707070; }");
+    //Line edit action icons
+    clear_search = new QAction(QPixmap(":/images/clear.png"), "Clear");
+    make_search = new QAction(QPixmap(":/images/search.png"), "Search");
+    clear_search->setWhatsThis("Clear search query and results");
+    ui->lineEdit->addAction(clear_search, QLineEdit::TrailingPosition);
+    ui->lineEdit->addAction(make_search, QLineEdit::LeadingPosition);
 
     connect(ui->writeMailButton, &QAbstractButton::clicked, this, &MainWindow::writeClicked);
     connect(inbox_disp, &InboxDisplay::mailSelected, this, &MainWindow::itemClicked);
@@ -66,6 +72,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(mail_frame, &MailFrame::mailTrashed, this, &MainWindow::trashMail);
     connect(mail_frame, &MailFrame::replyTo, this, &MainWindow::openReplyDialog);
     connect(mail_frame, &MailFrame::forwardMail, this, &MainWindow::openForwardDialog);
+    connect(ui->lineEdit, &QLineEdit::returnPressed, this, &MainWindow::searchEntered);
+    connect(clear_search, &QAction::triggered, this, &MainWindow::removeSearch);
+    connect(make_search, &QAction::triggered, this, &MainWindow::searchEntered);
 }
 
 
@@ -82,6 +91,25 @@ void MainWindow::setInbox(Inbox *ib)
 {
     inbox = ib;
     inbox_disp->setInbox(inbox->getInboxSummary());
+    BoxType type = ib->getActiveBox();
+
+    switch (type) {
+    case BoxType::INBOX:
+        ui->inbox_button->setStyleSheet(activeBoxStyle);
+        break;
+    case BoxType::TRASH:
+        ui->trash_button->setStyleSheet(activeBoxStyle);
+        break;
+    case BoxType::JUNK:
+        ui->junk_button->setStyleSheet(activeBoxStyle);
+        break;
+    case BoxType::SENT:
+        ui->sent_button->setStyleSheet(activeBoxStyle);
+        break;
+    case BoxType::DRAFT:
+        ui->draft_button->setStyleSheet(activeBoxStyle);
+        break;
+    }
 }
 
 
@@ -118,6 +146,7 @@ void MainWindow::openReplyDialog(int id)
     send_window->exec();
 }
 
+
 void MainWindow::openForwardDialog(int id)
 {
     if (id < 0)
@@ -126,4 +155,20 @@ void MainWindow::openForwardDialog(int id)
     ForwardDialog* for_window = new ForwardDialog(inbox->getMailData(id), this);
 
     for_window->exec();
+}
+
+
+void MainWindow::searchEntered()
+{
+    if (!ui->lineEdit || ui->lineEdit->text() == "")
+        return;
+
+    inbox_disp->setInbox(inbox->search(ui->lineEdit->text()));
+}
+
+
+void MainWindow::removeSearch()
+{
+    ui->lineEdit->setText("");
+    inbox_disp->setInbox(inbox->getInboxSummary());
 }

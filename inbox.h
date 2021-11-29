@@ -9,8 +9,11 @@
 #include <QSet>
 #include <QMap>
 #include <QString>
+#include <QMessageBox>
 
 struct MailSummary;
+
+enum class BoxType { INBOX, TRASH, JUNK, SENT, DRAFT };
 
 class Inbox : public QObject
 {
@@ -35,11 +38,16 @@ public:
 private:
     QVector<MailData> inbox_mail;
     QVector<MailData> trash_mail;
-    QVector<MailData> search_mail;
+    QVector<MailData> draft_mail;
+    QVector<MailData> sent_mail;
+    QVector<MailData> junk_mail;
+    BoxType activeBox;
     QMap<int, MailData*> mail_idx;
     void quicksort(QVector<MailData>& arr, int low, int high);
     int partition(QVector<MailData>& arr, int low, int high);
     void moveMail(QVector<MailData>& src, QVector<MailData>& dst, QVector<MailData>::Iterator move_it);
+    std::string toUpper(std::string s);
+    QVector<MailData>* selectBox();
 
 public:
     Inbox(std::vector<Email*>&& msgs);
@@ -47,10 +55,15 @@ public:
     void sortByDate(QVector<MailData>& vec);
     QVector<MailSummary> getInboxSummary();
     QVector<MailSummary> getTrashSummary();
-    const MailData& getMailData(int id) const;
-    const MailData& getTrashData(int id) const;
+    const MailData& getMailData(int id);
+    const MailData& getTrashData(int id);
     void moveToTrash(int id);
     void restoreMail(int id);
+    void addEmail(Email* mail);
+    void addEmail(Email* mail, BoxType type);
+    QVector<MailSummary> search(const QString& query);
+    BoxType getActiveBox() const;
+    void setActiveBox(BoxType type);
 };
 
 
@@ -61,13 +74,13 @@ public:
 struct MailSummary
 {
   int id;
-  bool* read = nullptr;
+  bool read;
   QString subject;
   QString sender;
   QString receiveDate;
   void setSummary(Inbox::MailData& data)
   {
-      this->read = &data.read;
+      this->read = data.read;
       this->id = data.id;
       sender = QString::fromStdString(data.mail->getFromAddress());
       subject = QString::fromStdString(data.mail->getSubject());
