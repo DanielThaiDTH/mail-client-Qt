@@ -33,6 +33,12 @@ public:
             this->mail = mail;
             read = false;
         }
+        MailData()
+        {
+            id = -1;
+            mail = nullptr;
+            read = false;
+        }
     };
 
 private:
@@ -42,6 +48,7 @@ private:
     QVector<MailData> sent_mail;
     QVector<MailData> junk_mail;
     BoxType activeBox;
+    MailData errorMailData;
     QMap<int, MailData*> mail_idx;
     void quicksort(QVector<MailData>& arr, int low, int high);
     int partition(QVector<MailData>& arr, int low, int high);
@@ -54,9 +61,8 @@ public:
     ~Inbox();
     void sortByDate(QVector<MailData>& vec);
     QVector<MailSummary> getInboxSummary();
-    QVector<MailSummary> getTrashSummary();
     const MailData& getMailData(int id);
-    const MailData& getTrashData(int id);
+    const MailData& getMailDataOffset(int id, int offset);
     void moveToTrash(int id);
     void restoreMail(int id);
     void addEmail(Email* mail);

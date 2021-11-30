@@ -157,6 +157,8 @@ QVector<Inbox::MailData>* Inbox::selectBox()
     case BoxType::DRAFT:
         box = &draft_mail;
         break;
+    default:
+        box = &inbox_mail;
     }
 
     return box;
@@ -178,36 +180,53 @@ QVector<MailSummary> Inbox::getInboxSummary()
     return inbox_summary;
 }
 
-
-QVector<MailSummary> Inbox::getTrashSummary()
-{
-    QVector<MailSummary> trash_summary;
-
-    for (auto it = trash_mail.begin(); it != trash_mail.end(); ++it) {
-        MailSummary sum;
-        sum.setSummary(*it);
-        trash_summary.push_back(sum);
-    }
-
-    return trash_summary;
-}
-
-
+/**
+ * @brief Inbox::getMailData, id must be contained in the MailData stored, otherwise
+ * behaviour is undefined.
+ * @param id
+ * @return
+ */
 const Inbox::MailData& Inbox::getMailData(int id)
 {
+    QVector<MailData>* box = selectBox();
     auto getByID = [&](MailData& d){ return d.id == id; };
-    auto data = std::find_if(inbox_mail.begin(), inbox_mail.end(), getByID);
+
+    auto data = std::find_if(box->begin(), box->end(), getByID);
+
+    if (data == box->end())
+        return errorMailData;
+
     data->read = true;
     return *data;
 }
 
 
-const Inbox::MailData& Inbox::getTrashData(int id)
+const Inbox::MailData& Inbox::getMailDataOffset(int id, int offset)
 {
+    QVector<MailData>* box = selectBox();
     auto getByID = [&](MailData& d){ return d.id == id; };
-    auto data = std::find_if(trash_mail.begin(), trash_mail.end(), getByID);
-    data->read = true;
-    return *data;
+
+    auto data_it = std::find_if(box->begin(), box->end(), getByID);
+
+    if (data_it == box->end())
+        return errorMailData;
+
+    if (offset > 0) {
+        for (int i = 0; i < offset; i++) {
+            ++data_it;
+            if (data_it == box->end())
+                return errorMailData;
+        }
+    } else {
+        for (int i = 0; i > offset; i--) {
+            --data_it;
+            if (data_it == box->begin() && i > offset + 1)
+                return errorMailData;
+        }
+    }
+
+    data_it->read = true;
+    return *data_it;
 }
 
 

@@ -32,7 +32,7 @@ void InboxDisplay::setInbox(const QVector<MailSummary>& summary)
 
     for (const MailSummary& sum : summary) {
         InboxItem* temp = new InboxItem(sum.id, sum.read, sum.subject, sum.sender);
-        temp->setMaximumHeight(200);
+        temp->setMaximumHeight(100);
         temp->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         mails->push_back(temp);
         layout->addWidget(temp);

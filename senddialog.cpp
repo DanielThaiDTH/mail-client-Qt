@@ -20,6 +20,7 @@ SendDialog::SendDialog(QWidget *parent) :
     QString OKStyle = "*:hover { background-color: #00BC4B; }\n";
     OKStyle += "* { border-radius: 3; background-color: #1FF2A5; color: white; font-weight: bold; font-size: 14px; border: 1px solid #00BC4B;}";
     ok->setStyleSheet(OKStyle);
+    ok->setText("Send");
     QPushButton* cancel = ui->buttonBox->button(QDialogButtonBox::Cancel);
     cancel->setMinimumHeight(30);
     cancel->setStyleSheet("* { border-radius: 3; font-size: 14px; background-color: white; font-weight: bold; border: 1px solid #707070; } *:hover { background-color: #C0C0C0; }");

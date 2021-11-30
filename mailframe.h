@@ -33,11 +33,6 @@ class MailFrame : public QFrame
     QPushButton* prev_button;
     QPushButton* next_button;
 
-    QAction* reply_act;
-    QAction* forward_act;
-    QAction* next_act;
-    QAction* prev_act;
-
     int mail_id;
 
 public:
@@ -46,6 +41,7 @@ public:
 
 public slots:
     void updateContent(const Inbox::MailData& data);
+    void clearContent();
     void replyHandle();
     void forwardHandle();
     void tagHandle();

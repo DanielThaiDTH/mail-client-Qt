@@ -14,11 +14,14 @@ MainWindow::MainWindow(QWidget *parent)
     writeStyle += "*:hover { background-color: #B4EBEB; }";
     ui->writeMailButton->setStyleSheet(writeStyle);
 
-    QString filterStyle = "* { background-color: #BED5F1; font-size: 14px; color:#707070; border-radius: 5; }";
+    QString filterStyle = "* { background-color: #BED5F1; font-size: 14px; color:#707070; border-radius: 5; }\n";
+    filterStyle += "*:hover { background-color: #A1C6DF; }";
     ui->filterButton->setStyleSheet(filterStyle);
     ui->filterButton->setMinimumHeight(30);
     ui->filterButton->setMinimumWidth(80);
 
+
+    /*Set up the inbox frame*/
     QString inboxStyle = "* { background-color: white; }";
 
     inbox_frame = new QFrame(this);
@@ -33,6 +36,8 @@ MainWindow::MainWindow(QWidget *parent)
     inbox_disp->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     inbox_layout->addWidget(inbox_disp);
 
+
+    /*Set up the mail frame*/
     mail_frame = new MailFrame();
     mail_frame->setObjectName("mail-frame");
     mail_frame->setFrameShape(QFrame::Panel);
@@ -43,11 +48,15 @@ MainWindow::MainWindow(QWidget *parent)
     scrollArea->setWidget(inbox_frame);
     scrollArea->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
 
+
+    /*Set up the splitter*/
     splitter = new QSplitter(this);
     splitter->addWidget(scrollArea);
     splitter->addWidget(mail_frame);
     splitter->setHandleWidth(1);
     splitter->setStyleSheet("QSplitter::handle { background-color: white; border: 1px solid #707070;}");
+    splitter->setMinimumHeight(650);
+    splitter->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     ui->layoutInbox->addWidget(splitter);
 
 
@@ -66,15 +75,26 @@ MainWindow::MainWindow(QWidget *parent)
     ui->lineEdit->addAction(clear_search, QLineEdit::TrailingPosition);
     ui->lineEdit->addAction(make_search, QLineEdit::LeadingPosition);
 
+    //misc
+    ui->settings->setMaximumHeight(30);
+    ui->settings->setMinimumHeight(30);
+    ui->settings->setMaximumWidth(30);
+    ui->settings->setMinimumWidth(30);
+
     connect(ui->writeMailButton, &QAbstractButton::clicked, this, &MainWindow::writeClicked);
     connect(inbox_disp, &InboxDisplay::mailSelected, this, &MainWindow::itemClicked);
     connect(this, &MainWindow::newMailContent, mail_frame, &MailFrame::updateContent);
+
     connect(mail_frame, &MailFrame::mailTrashed, this, &MainWindow::trashMail);
     connect(mail_frame, &MailFrame::replyTo, this, &MainWindow::openReplyDialog);
     connect(mail_frame, &MailFrame::forwardMail, this, &MainWindow::openForwardDialog);
+    connect(mail_frame, &MailFrame::nextMail, this, &MainWindow::nextMail);
+    connect(mail_frame, &MailFrame::prevMail, this, &MainWindow::prevMail);
+
     connect(ui->lineEdit, &QLineEdit::returnPressed, this, &MainWindow::searchEntered);
     connect(clear_search, &QAction::triggered, this, &MainWindow::removeSearch);
     connect(make_search, &QAction::triggered, this, &MainWindow::searchEntered);
+    connect(ui->filterButton, &QAbstractButton::clicked, this, &MainWindow::searchFilterOpen);
 
     connect(ui->inbox_button, &QAbstractButton::clicked, this, &MainWindow::inboxSelected);
     connect(ui->sent_button, &QAbstractButton::clicked, this, &MainWindow::sentSelected);
@@ -133,6 +153,8 @@ void MainWindow::changeBox(BoxType type)
 {
     inbox->setActiveBox(type);
     inbox_disp->setInbox(inbox->getInboxSummary());
+    mail_frame->clearContent();
+    mail_frame->hide();
 }
 
 
@@ -147,7 +169,10 @@ void MainWindow::writeClicked()
 void MainWindow::itemClicked(int id)
 {
     const Inbox::MailData& data = inbox->getMailData(id);
-    emit newMailContent(data);
+    if (data.id != -1) {
+        mail_frame->show();
+        emit newMailContent(data);
+    }
 }
 
 
@@ -155,6 +180,7 @@ void MainWindow::trashMail(int id)
 {
     inbox->moveToTrash(id);
     inbox_disp->setInbox(inbox->getInboxSummary());
+    mail_frame->hide();
 }
 
 
@@ -181,6 +207,26 @@ void MainWindow::openForwardDialog(int id)
 }
 
 
+void MainWindow::nextMail(int id)
+{
+    const Inbox::MailData& data = inbox->getMailDataOffset(id, 1);
+    if (data.id != -1) {
+        mail_frame->show();
+        emit newMailContent(data);
+    }
+}
+
+
+void MainWindow::prevMail(int id)
+{
+    const Inbox::MailData& data = inbox->getMailDataOffset(id, -1);
+    if (data.id != -1) {
+        mail_frame->show();
+        emit newMailContent(data);
+    }
+}
+
+
 void MainWindow::searchEntered()
 {
     if (!ui->lineEdit || ui->lineEdit->text() == "")
@@ -195,6 +241,14 @@ void MainWindow::removeSearch()
     ui->lineEdit->setText("");
     inbox_disp->setInbox(inbox->getInboxSummary());
 }
+
+
+void MainWindow::searchFilterOpen()
+{
+    FilterDialog* dialog = new FilterDialog(this);
+    dialog->exec();
+}
+
 
 void MainWindow::inboxSelected()
 {

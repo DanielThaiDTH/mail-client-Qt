@@ -10,14 +10,6 @@ MailFrame::MailFrame(QWidget* parent) : QFrame(parent)
     end_layout = new QGridLayout();
     mail_id = -1;
 
-
-    //Action setup
-    next_act = new QAction(this);
-    prev_act = new QAction(this);
-
-    connect(next_act, &QAction::triggered, this, &MailFrame::nextHandle);
-    connect(prev_act, &QAction::triggered, this, &MailFrame::prevHandle);
-
     //Tool setup
     reply_tool = new QPushButton("");
     forward_tool = new QPushButton("");
@@ -97,10 +89,11 @@ MailFrame::MailFrame(QWidget* parent) : QFrame(parent)
     prev_button->setIconSize(QSize(25,25));
     next_button->setStyleSheet(button_style);
     prev_button->setStyleSheet(button_style);
-    next_button->addAction(next_act);
-    prev_button->addAction(prev_act);
     end_layout->addWidget(next_button, 1, 0, Qt::AlignRight);
     end_layout->addWidget(prev_button, 1, 1, Qt::AlignLeft);
+
+    connect(next_button, &QAbstractButton::clicked, this, &MailFrame::nextHandle);
+    connect(prev_button, &QAbstractButton::clicked, this, &MailFrame::prevHandle);
 
 
     //Setup layout
@@ -114,10 +107,21 @@ MailFrame::MailFrame(QWidget* parent) : QFrame(parent)
 MailFrame::~MailFrame() {}
 
 
+/**
+ * @brief MailFrame::updateContent, updates the content using the
+ * MailData passed.
+ * @param data
+ */
 void MailFrame::updateContent(const Inbox::MailData& data)
 {
     mail_id = data.id;
     content_frame->setContent(data);
+}
+
+
+void MailFrame::clearContent()
+{
+    content_frame->clearContents();
 }
 
 

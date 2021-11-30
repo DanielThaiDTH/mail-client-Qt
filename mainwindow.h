@@ -14,6 +14,7 @@
 #include "mailframe.h"
 #include "senddialog.h"
 #include "forwarddialog.h"
+#include "filterdialog.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -74,8 +75,15 @@ public slots:
      * display to the active inbox.
      */
     void removeSearch();
+
+    /**
+     * @brief searchFilterOpen, opens the search filter dialog.
+     */
+    void searchFilterOpen();
     void openReplyDialog(int id);
     void openForwardDialog(int id);
+    void nextMail(int id);
+    void prevMail(int id);
     void inboxSelected();
     void sentSelected();
     void draftSelected();

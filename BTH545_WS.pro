@@ -14,6 +14,7 @@ SOURCES += \
     MailParser.cpp \
     collapsablesection.cpp \
     errorwindow.cpp \
+    filterdialog.cpp \
     forwarddialog.cpp \
     inbox.cpp \
     inboxdisplay.cpp \
@@ -30,6 +31,7 @@ HEADERS += \
     MailParser.h \
     collapsablesection.h \
     errorwindow.h \
+    filterdialog.h \
     forwarddialog.h \
     inbox.h \
     inboxdisplay.h \
@@ -41,6 +43,7 @@ HEADERS += \
 
 FORMS += \
     errorwindow.ui \
+    filterdialog.ui \
     forwarddialog.ui \
     mainwindow.ui \
     senddialog.ui
