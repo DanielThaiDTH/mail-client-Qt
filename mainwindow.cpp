@@ -231,10 +231,11 @@ void MainWindow::prevMail(int id)
 
 void MainWindow::searchEntered()
 {
-    if (!ui->lineEdit || ui->lineEdit->text() == "")
+    if (!ui->lineEdit)
         return;
 
-    inbox_disp->setInbox(inbox->search(ui->lineEdit->text()));
+    filter.setQuery(ui->lineEdit->text().trimmed());
+    inbox_disp->setInbox(inbox->search(filter));
 }
 
 
@@ -247,7 +248,7 @@ void MainWindow::removeSearch()
 
 void MainWindow::searchFilterOpen()
 {
-    FilterDialog* dialog = new FilterDialog(this);
+    FilterDialog* dialog = new FilterDialog(&filter, this);
     dialog->exec();
 }
 

@@ -12,6 +12,7 @@
 #include <QMessageBox>
 
 struct MailSummary;
+class SearchFilter;
 
 enum class BoxType { INBOX, TRASH, JUNK, SENT, DRAFT };
 
@@ -67,7 +68,7 @@ public:
     void restoreMail(int id);
     void addEmail(Email* mail);
     void addEmail(Email* mail, BoxType type);
-    QVector<MailSummary> search(const QString& query);
+    QVector<MailSummary> search(const SearchFilter& filter);
     BoxType getActiveBox() const;
     void setActiveBox(BoxType type);
 };

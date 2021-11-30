@@ -101,3 +101,57 @@ int DateTime::getMinute() const
 {
     return minute;
 }
+
+
+bool DateTime::operator<(const DateTime& other) const
+{
+    if (this->getYear() < other.getYear()) {
+        return true;
+    } else if (this->getYear() == other.getYear() && this->getMonth() < other.getMonth()) {
+        return true;
+    } else if (this->getYear() == other.getYear() && this->getMonth() == other.getMonth()
+               && this->getDay() < other.getDay()) {
+        return true;
+    } else if (this->getYear() == other.getYear() && this->getMonth() == other.getMonth()
+               && this->getDay() == other.getDay() && this->getHour() < other.getHour()) {
+        return true;
+    } else if (this->getYear() == other.getYear() && this->getMonth() == other.getMonth()
+               && this->getDay() == other.getDay() && this->getHour() == other.getHour()
+               && this->getMinute() < other.getMinute()) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+bool DateTime::operator>(const DateTime &other) const
+{
+    return other < *this && !(other == *this);
+}
+
+
+bool DateTime::operator==(const DateTime &other) const
+{
+    return this->getYear() == other.getYear() && this->getMonth() == other.getMonth()
+            && this->getDay() == other.getDay() && this->getHour() == other.getHour()
+            && this->getMinute() == other.getMinute();
+}
+
+
+bool DateTime::operator<=(const DateTime &other) const
+{
+    return *this < other || *this == other;
+}
+
+
+bool DateTime::operator>=(const DateTime &other) const
+{
+    return *this > other || *this == other;
+}
+
+
+bool DateTime::operator!=(const DateTime& other) const
+{
+    return !(*this == other);
+}

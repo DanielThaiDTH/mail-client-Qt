@@ -23,6 +23,7 @@ SOURCES += \
     mailframe.cpp \
     main.cpp \
     mainwindow.cpp \
+    searchfilter.cpp \
     senddialog.cpp
 
 HEADERS += \
@@ -39,6 +40,7 @@ HEADERS += \
     mailcontent.h \
     mailframe.h \
     mainwindow.h \
+    searchfilter.h \
     senddialog.h
 
 FORMS += \

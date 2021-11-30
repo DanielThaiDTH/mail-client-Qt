@@ -25,6 +25,12 @@ public:
     int getMinute() const;
     int getHour() const;
     int getUTC() const;
+    bool operator<(const DateTime& other) const;
+    bool operator>(const DateTime& other) const;
+    bool operator==(const DateTime& other) const;
+    bool operator!=(const DateTime& other) const;
+    bool operator<=(const DateTime& other) const;
+    bool operator>=(const DateTime& other) const;
 };
 
 #endif

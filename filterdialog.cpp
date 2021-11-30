@@ -2,11 +2,14 @@
 #include "ui_filterdialog.h"
 #include <QPushButton>
 
-FilterDialog::FilterDialog(QWidget *parent) :
+FilterDialog::FilterDialog(SearchFilter* filter, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::FilterDialog)
 {
     ui->setupUi(this);
+    this->filter = filter;
+
+    //Initializing button styles
     QString searchButtonStyle = "*:hover { background-color: #437BEC; }\n";
     searchButtonStyle += "* { border-radius: 3; background-color: #21089F; ";
     searchButtonStyle += "color: white; font-weight: bold; font-size: 14px; border: 1px solid #707070; ";
@@ -23,9 +26,68 @@ FilterDialog::FilterDialog(QWidget *parent) :
     cancel->setStyleSheet(cancelStyle);
     cancel->setMinimumHeight(30);
     cancel->setText(" Cancel ");
+
+
+    //Setting text
+    ui->toLine->setText(filter->getToFilter());
+    ui->fromLine->setText(filter->getFromFilter());
+    ui->subjectLine->setText(filter->getSubjectFilter());
+    ui->tagsLine->setText(filter->getTagFilter());
+    ui->textLine->setText(filter->getTextFilter());
+    ui->attachCheckBox->setChecked(filter->getAttachmentCheck());
+    ui->attachFilterLine->setText(filter->getAttachmentFilter());
+
+    connect(ui->toLine, &QLineEdit::textEdited, this, &FilterDialog::toChange);
+    connect(ui->fromLine, &QLineEdit::textEdited, this, &FilterDialog::fromChange);
+    connect(ui->subjectLine, &QLineEdit::textEdited, this, &FilterDialog::subjectChange);
+    connect(ui->tagsLine, &QLineEdit::textEdited, this, &FilterDialog::tagsChange);
+    connect(ui->textLine, &QLineEdit::textEdited, this, &FilterDialog::textChange);
+    connect(ui->attachCheckBox, &QCheckBox::toggled, this, &FilterDialog::attachmentCheckChange);
+    connect(ui->attachFilterLine, &QLineEdit::textEdited, this, &FilterDialog::attachmentChange);
 }
 
 FilterDialog::~FilterDialog()
 {
     delete ui;
+}
+
+
+void FilterDialog::queryChange(const QString& text)
+{
+    filter->setQuery(text);
+}
+
+void FilterDialog::toChange(const QString& text)
+{
+    filter->setToFilter(text);
+}
+
+void FilterDialog::fromChange(const QString& text)
+{
+    filter->setFromFilter(text);
+}
+
+void FilterDialog::subjectChange(const QString& text)
+{
+    filter->setSubjectFilter(text);
+}
+
+void FilterDialog::tagsChange(const QString& text)
+{
+    filter->setTagFilter(text);
+}
+
+void FilterDialog::textChange(const QString& text)
+{
+    filter->setTextFilter(text);
+}
+
+void FilterDialog::attachmentCheckChange(bool val)
+{
+    filter->setAttachmentCheck(val);
+}
+
+void FilterDialog::attachmentChange(const QString& text)
+{
+    filter->setAttachmentFilter(text);
 }

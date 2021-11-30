@@ -15,6 +15,7 @@
 #include "senddialog.h"
 #include "forwarddialog.h"
 #include "filterdialog.h"
+#include "searchfilter.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -34,6 +35,7 @@ class MainWindow : public QMainWindow
     MailFrame* mail_frame;
     QAction* clear_search;
     QAction* make_search;
+    SearchFilter filter;
 
     QString inactiveBoxStyle = "* { margin: 10px; color: #707070; } *:hover { text-decoration: underline; }";
     QString activeBoxStyle = "QPushButton { margin: 10px; color: #CF4F1F; }";

@@ -1,4 +1,5 @@
 #include "inbox.h"
+#include "searchfilter.h"
 #include <utility>
 #include <algorithm>
 #include <cstring>
@@ -322,14 +323,14 @@ std::string Inbox::toUpper(std::string s)
  * @param query
  * @return QVector<MailSummary>
  */
-QVector<MailSummary> Inbox::search(const QString &query)
+QVector<MailSummary> Inbox::search(const SearchFilter& filter)
 {
-    std::string search_query = query.toStdString();
+//    std::string search_query = query.toStdString();
 
-    auto search_expr = [&](const MailData& data){
-        auto size = toUpper(data.mail->getSubject()).find(toUpper(search_query));
-        return size != std::string::npos;
-    };
+//    auto search_expr = [&](const MailData& data){
+//        auto size = toUpper(data.mail->getSubject()).find(toUpper(search_query));
+//        return size != std::string::npos;
+//    };
 
     auto to_summary = [](MailData& data) {
         MailSummary sum;
@@ -341,7 +342,7 @@ QVector<MailSummary> Inbox::search(const QString &query)
     QVector<MailData>* box = selectBox();
     QVector<MailSummary> search_results;
 
-    std::copy_if(box->begin(), box->end(), std::back_inserter(found), search_expr);
+    std::copy_if(box->begin(), box->end(), std::back_inserter(found), filter);
     std::transform(found.begin(), found.end(), std::back_inserter(search_results), to_summary);
 
     return search_results;
