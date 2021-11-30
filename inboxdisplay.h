@@ -19,6 +19,7 @@ public:
     InboxDisplay(QWidget* parent = nullptr);
     ~InboxDisplay();
     void setInbox(const QVector<MailSummary>& summary);
+    void updateRead(int id);
 
 public slots:
     void itemClicked(int id);

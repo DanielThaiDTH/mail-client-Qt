@@ -41,6 +41,19 @@ void InboxDisplay::setInbox(const QVector<MailSummary>& summary)
 }
 
 
+void InboxDisplay::updateRead(int id)
+{
+    if (!mails)
+        return;
+
+    for (InboxItem*& item : *mails) {
+        if (item->getID() == id) {
+            item->setReadState(true);
+        }
+    }
+}
+
+
 void InboxDisplay::itemClicked(int id)
 {
     emit mailSelected(id);

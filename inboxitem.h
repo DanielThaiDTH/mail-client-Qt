@@ -38,6 +38,7 @@ public:
     void leaveEvent(QEvent* e) override;
     void mousePressEvent(QMouseEvent* e) override;
     int getID() const;
+    void setReadState(bool state);
 
 public slots:
     void checkChanged(int value);

@@ -90,3 +90,14 @@ int InboxItem::getID() const
 {
     return mail_id;
 }
+
+
+void InboxItem::setReadState(bool state)
+{
+    isRead = state;
+
+    if (isRead)
+        subject_label->setStyleSheet(subjectReadStyle);
+    else
+        subject_label->setStyleSheet(subjectUnreadStyle);
+}

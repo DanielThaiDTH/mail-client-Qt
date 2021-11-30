@@ -213,6 +213,7 @@ void MainWindow::nextMail(int id)
     if (data.id != -1) {
         mail_frame->show();
         emit newMailContent(data);
+        inbox_disp->updateRead(data.id);
     }
 }
 
@@ -223,6 +224,7 @@ void MainWindow::prevMail(int id)
     if (data.id != -1) {
         mail_frame->show();
         emit newMailContent(data);
+        inbox_disp->updateRead(data.id);
     }
 }
 
