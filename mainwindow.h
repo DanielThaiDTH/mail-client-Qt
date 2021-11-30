@@ -16,6 +16,7 @@
 #include "forwarddialog.h"
 #include "filterdialog.h"
 #include "searchfilter.h"
+#include "tagmanagedialog.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -84,6 +85,7 @@ public slots:
     void searchFilterOpen();
     void openReplyDialog(int id);
     void openForwardDialog(int id);
+    void openTagDialog(int id);
     void nextMail(int id);
     void prevMail(int id);
     void inboxSelected();

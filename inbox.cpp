@@ -358,3 +358,22 @@ void Inbox::setActiveBox(BoxType type)
 {
     activeBox = type;
 }
+
+
+QSet<QString>& Inbox::getTags()
+{
+    return tags;
+}
+
+QSet<QString>& Inbox::getMailTags(int id)
+{
+    QVector<MailData>* box = selectBox();
+    auto getByID = [&](MailData& d){ return d.id == id; };
+
+    auto data = std::find_if(box->begin(), box->end(), getByID);
+
+    if (data == box->end())
+        return errorMailData.tags;
+
+    return data->tags;
+}

@@ -51,6 +51,7 @@ private:
     BoxType activeBox;
     MailData errorMailData;
     QMap<int, MailData*> mail_idx;
+    QSet<QString> tags;
     void quicksort(QVector<MailData>& arr, int low, int high);
     int partition(QVector<MailData>& arr, int low, int high);
     void moveMail(QVector<MailData>& src, QVector<MailData>& dst, QVector<MailData>::Iterator move_it);
@@ -71,6 +72,8 @@ public:
     QVector<MailSummary> search(const SearchFilter& filter);
     BoxType getActiveBox() const;
     void setActiveBox(BoxType type);
+    QSet<QString>& getTags();
+    QSet<QString>& getMailTags(int id);
 };
 
 

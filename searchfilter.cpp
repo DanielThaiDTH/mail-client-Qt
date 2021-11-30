@@ -174,8 +174,16 @@ bool SearchFilter::operator()(const Inbox::MailData& data) const
         passed = search_expr(data.mail->getContent(), text_filter);
 
     if (passed && tag_filter.size() > 0) {
-        for (const QString& tag : data.tags) {
-            passed = passed && search_expr(tag.toStdString(), tag_filter);
+        if (data.tags.size() > 0) {
+            bool found = false;
+            for (const QString& tag : data.tags) {
+                found = search_expr(tag.toStdString(), tag_filter);
+                if (found)
+                    break;
+            }
+            passed = found;
+        } else {
+            passed = false;
         }
     }
 
@@ -187,9 +195,14 @@ bool SearchFilter::operator()(const Inbox::MailData& data) const
         passed = attach.size() > 0;
 
         if (passed && attach_filter.size() > 0) {
+            bool found = false;
             for (const std::string& file : attach) {
-                passed = passed && search_expr(file, attach_filter);
+                found = search_expr(file, attach_filter);
+                if (found)
+                    break;
             }
+
+            passed = found;
         }
     }
 

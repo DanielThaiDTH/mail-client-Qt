@@ -24,7 +24,8 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     searchfilter.cpp \
-    senddialog.cpp
+    senddialog.cpp \
+    tagmanagedialog.cpp
 
 HEADERS += \
     DateTime.h \
@@ -41,14 +42,16 @@ HEADERS += \
     mailframe.h \
     mainwindow.h \
     searchfilter.h \
-    senddialog.h
+    senddialog.h \
+    tagmanagedialog.h
 
 FORMS += \
     errorwindow.ui \
     filterdialog.ui \
     forwarddialog.ui \
     mainwindow.ui \
-    senddialog.ui
+    senddialog.ui \
+    tagmanagedialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

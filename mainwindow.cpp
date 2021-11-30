@@ -90,6 +90,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(mail_frame, &MailFrame::forwardMail, this, &MainWindow::openForwardDialog);
     connect(mail_frame, &MailFrame::nextMail, this, &MainWindow::nextMail);
     connect(mail_frame, &MailFrame::prevMail, this, &MainWindow::prevMail);
+    connect(mail_frame, &MailFrame::tagClicked, this, &MainWindow::openTagDialog);
 
     connect(ui->lineEdit, &QLineEdit::returnPressed, this, &MainWindow::searchEntered);
     connect(clear_search, &QAction::triggered, this, &MainWindow::removeSearch);
@@ -193,6 +194,7 @@ void MainWindow::openReplyDialog(int id)
     send_window->setReplyMode(inbox->getMailData(id));
 
     send_window->exec();
+    send_window->deleteLater();
 }
 
 
@@ -204,6 +206,18 @@ void MainWindow::openForwardDialog(int id)
     ForwardDialog* for_window = new ForwardDialog(inbox->getMailData(id), this);
 
     for_window->exec();
+    for_window->deleteLater();
+}
+
+
+void MainWindow::openTagDialog(int id)
+{
+    if (id < 0)
+        return;
+
+    TagManageDialog* td = new TagManageDialog(&inbox->getMailTags(id), &inbox->getTags(), this);
+    td->exec();
+    td->deleteLater();
 }
 
 
