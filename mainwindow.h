@@ -17,6 +17,7 @@
 #include "filterdialog.h"
 #include "searchfilter.h"
 #include "tagmanagedialog.h"
+#include "globaltagdialog.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -93,6 +94,7 @@ public slots:
     void draftSelected();
     void trashSelected();
     void junkSelected();
+    void tagSelected();
 
 signals:
     void newMailContent(const Inbox::MailData& data);

@@ -121,6 +121,7 @@ void SearchFilter::reset()
     from_filter = "";
     subject_filter = "";
     text_filter = "";
+    tag_filter = "";
     start_date = QDate(1970, 1, 1);
     end_date = QDate(2050, 1, 1);
     attachment_check = false;

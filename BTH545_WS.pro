@@ -16,6 +16,7 @@ SOURCES += \
     errorwindow.cpp \
     filterdialog.cpp \
     forwarddialog.cpp \
+    globaltagdialog.cpp \
     inbox.cpp \
     inboxdisplay.cpp \
     inboxitem.cpp \
@@ -35,6 +36,7 @@ HEADERS += \
     errorwindow.h \
     filterdialog.h \
     forwarddialog.h \
+    globaltagdialog.h \
     inbox.h \
     inboxdisplay.h \
     inboxitem.h \
@@ -49,6 +51,7 @@ FORMS += \
     errorwindow.ui \
     filterdialog.ui \
     forwarddialog.ui \
+    globaltagdialog.ui \
     mainwindow.ui \
     senddialog.ui \
     tagmanagedialog.ui

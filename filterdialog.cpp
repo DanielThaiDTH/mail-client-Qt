@@ -25,7 +25,9 @@ FilterDialog::FilterDialog(SearchFilter* filter, QWidget *parent) :
     cancelStyle += "*:hover { background-color: #C0C0C0; }";
     cancel->setStyleSheet(cancelStyle);
     cancel->setMinimumHeight(30);
-    cancel->setText(" Cancel ");
+    cancel->setText(" Clear ");
+
+    connect(cancel, &QPushButton::clicked, this, &QDialog::reject);
 
 
     //Setting text

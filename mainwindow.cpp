@@ -102,6 +102,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->draft_button, &QAbstractButton::clicked, this, &MainWindow::draftSelected);
     connect(ui->trash_button, &QAbstractButton::clicked, this, &MainWindow::trashSelected);
     connect(ui->junk_button, &QAbstractButton::clicked, this, &MainWindow::junkSelected);
+    connect(ui->tags_button, &QAbstractButton::clicked, this, &MainWindow::tagSelected);
+
+    connect(ui->actionExit, &QAction::triggered, qApp, &QApplication::exit);
 }
 
 
@@ -263,7 +266,12 @@ void MainWindow::removeSearch()
 void MainWindow::searchFilterOpen()
 {
     FilterDialog* dialog = new FilterDialog(&filter, this);
-    dialog->exec();
+    int state = dialog->exec();
+    if (state == QDialog::Rejected) {
+        filter.reset();
+        filter.setQuery(ui->lineEdit->text().trimmed());
+        inbox_disp->setInbox(inbox->search(filter));
+    }
 }
 
 
@@ -300,4 +308,13 @@ void MainWindow::junkSelected()
     resetButtonStyles();
     changeBox(BoxType::JUNK);
     ui->junk_button->setStyleSheet(activeBoxStyle);
+}
+
+void MainWindow::tagSelected()
+{
+    ui->tags_button->setStyleSheet(activeBoxStyle);
+    GlobalTagDialog* gd = new GlobalTagDialog(&inbox->getTags());
+    gd->exec();
+    ui->tags_button->setStyleSheet(inactiveBoxStyle);
+    gd->deleteLater();
 }
