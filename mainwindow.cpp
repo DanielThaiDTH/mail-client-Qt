@@ -166,7 +166,7 @@ void MainWindow::changeBox(BoxType type)
 void MainWindow::writeClicked()
 {
     Email* m = nullptr;
-    SendDialog* send_window = new SendDialog(&m, this);
+    SendDialog* send_window = new SendDialog(&m, inbox->getLocalAddr(), this);
 
     int state = send_window->exec();
 
@@ -185,9 +185,23 @@ void MainWindow::writeClicked()
 void MainWindow::itemClicked(int id)
 {
     const Inbox::MailData& data = inbox->getMailData(id);
-    if (data.id != -1) {
+    if (inbox->getActiveBox() != BoxType::DRAFT && data.id != -1) {
         mail_frame->show();
         emit newMailContent(data);
+    } else if (data.id != -1) {
+        Email* m = nullptr;
+        SendDialog* send_window = new SendDialog(&m, inbox->getLocalAddr(), this);
+        send_window->setDraftMode(inbox->getMailData(id));
+
+        int state = send_window->exec();
+
+        if (state == QDialog::Accepted) {
+            inbox->addEmail(m, BoxType::SENT);
+            inbox->removeMail(id);
+            inbox_disp->setInbox(inbox->getInboxSummary());
+        }
+
+        send_window->deleteLater();
     }
 }
 
@@ -206,7 +220,7 @@ void MainWindow::openReplyDialog(int id)
         return;
 
     Email* m = nullptr;
-    SendDialog* send_window = new SendDialog(&m, this);
+    SendDialog* send_window = new SendDialog(&m, inbox->getLocalAddr(), this);
     send_window->setReplyMode(inbox->getMailData(id));
 
     int state = send_window->exec();

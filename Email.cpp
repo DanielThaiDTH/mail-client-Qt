@@ -13,14 +13,25 @@ EmailAddress::EmailAddress(std::string local, std::string domain)
 }
 
 
+void EmailAddress::setFull(std::string full_addr)
+{
+    full = full_addr;
+}
+
+
 EmailAddress* EmailAddress::emailAddressFromString(const std::string& mail_string)
 {
     size_t at_pos = mail_string.find('@');
 
-    if (at_pos == std::string::npos)
-        return nullptr;
+    if (at_pos == std::string::npos) {
+        EmailAddress* addr = new EmailAddress("", "");
+        addr->setFull(mail_string);
+        return addr;
+    }
 
-    return new EmailAddress(mail_string.substr(0, at_pos), mail_string.substr(at_pos+1));
+    EmailAddress* addr = new EmailAddress(mail_string.substr(0, at_pos), mail_string.substr(at_pos+1));
+    addr->setFull(mail_string);
+    return addr;
 }
 
 
@@ -36,7 +47,7 @@ std::string EmailAddress::getLocal() const
 
 std::string EmailAddress::getAddress() const
 {
-    return local_part + "@" + domain;
+    return full;
 }
 /***Email Address***/
 

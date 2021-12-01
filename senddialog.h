@@ -16,11 +16,13 @@ class SendDialog : public QDialog
     Email** mail;
     const Email* reply;
     QString error_style = "* { background: pink }";
+    QString local;
 
 public:
-    explicit SendDialog(Email** mail, QWidget *parent = nullptr);
+    explicit SendDialog(Email** mail, QString local_addr, QWidget *parent = nullptr);
     ~SendDialog();
     void setReplyMode(const Inbox::MailData& mail);
+    void setDraftMode(const Inbox::MailData& mail);
     void makeMail();
 
 public slots:

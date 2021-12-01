@@ -311,6 +311,19 @@ void Inbox::addEmail(Email *mail, BoxType type)
 }
 
 
+void Inbox::removeMail(int id)
+{
+    auto getByID = [&](MailData& d){ return d.id == id; };
+    QVector<MailData>* box = selectBox();
+
+    auto data = std::find_if(box->begin(), box->end(), getByID);
+
+    if (data != box->end()) {
+        box->erase(data);
+    }
+}
+
+
 std::string Inbox::toUpper(std::string s)
 {
     std::transform(s.begin(), s.end(), s.begin(), [](char c){ return std::toupper(c); });

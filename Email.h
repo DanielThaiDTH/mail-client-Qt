@@ -11,7 +11,9 @@ class EmailAddress
 {
     std::string local_part;
     std::string domain;
+    std::string full;
     EmailAddress(std::string local, std::string domain);
+    void setFull(std::string full_addr);
 public:
     static EmailAddress* emailAddressFromString(const std::string& mail_string);
     std::string getDomain() const;

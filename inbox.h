@@ -68,6 +68,7 @@ public:
     const MailData& getMailDataOffset(int id, int offset);
     void moveToTrash(int id);
     void restoreMail(int id);
+    void removeMail(int id);
     void addEmail(Email* mail);
     void addEmail(Email* mail, BoxType type);
     QVector<MailSummary> search(const SearchFilter& filter);

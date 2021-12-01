@@ -4,13 +4,14 @@
 #include <QValidator>
 #include <QRegularExpression>
 
-SendDialog::SendDialog(Email** mail, QWidget *parent) :
+SendDialog::SendDialog(Email** mail, QString local_addr, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SendDialog)
 {
     ui->setupUi(this);
     this->mail = mail;
     reply = nullptr;
+    local = local_addr;
 
     bcc_visible = false;
     this->setWindowTitle("Send Email");
@@ -34,11 +35,15 @@ SendDialog::SendDialog(Email** mail, QWidget *parent) :
     ui->bcc_button->setStyleSheet("* { border-radius: 3; background-color: #BED5F1; border: 1px solid #A6C3E6; }\n *:hover { background-color: #A6C3E6; }");
     connect(ui->bcc_button, &QAbstractButton::clicked, this, &SendDialog::bccClicked);
 
-    QRegularExpression re("\\S+@^\\S+");
-    QRegularExpressionValidator v(re, this);
-    ui->to_edit->setValidator(&v);
+    QRegularExpression re("\\S+@\\S+");
+    auto v = new QRegularExpressionValidator(re, this);
+    ui->to_edit->setValidator(v);
+    ui->cc_edit->setValidator(v);
+    ui->bcc_edit->setValidator(v);
 
     connect(ui->to_edit, &QLineEdit::textChanged, this, &SendDialog::checkAddr);
+    connect(ui->cc_edit, &QLineEdit::textChanged, this, &SendDialog::checkAddr);
+    connect(ui->bcc_edit, &QLineEdit::textChanged, this, &SendDialog::checkAddr);
 }
 
 
@@ -56,6 +61,14 @@ void SendDialog::setReplyMode(const Inbox::MailData& data)
     ui->subject_edit->setText("Re: " + QString::fromStdString(data.mail->getSubject()));
     this->setWindowTitle("Reply to Email");
     this->reply = data.mail;
+}
+
+
+void SendDialog::setDraftMode(const Inbox::MailData& data)
+{
+    ui->to_edit->setText(QString::fromStdString(data.mail->getToAddress()));
+    ui->subject_edit->setText(QString::fromStdString(data.mail->getSubject()));
+    ui->plainTextEdit->setPlainText(QString::fromStdString(data.mail->getContent()));
 }
 
 
@@ -87,7 +100,7 @@ void SendDialog::makeMail()
 {
     *mail = new Email();
     (*mail)->setToAddress(ui->to_edit->text().toStdString());
-    (*mail)->setFromAddress("a@a");
+    (*mail)->setFromAddress(local.toStdString());
     (*mail)->setSubject(ui->subject_edit->text().toStdString());
     (*mail)->setContent(ui->plainTextEdit->toPlainText().toStdString());
     (*mail)->setSendDate("02/07/2011 16:47 UTC+3");
@@ -113,12 +126,34 @@ void SendDialog::makeMail()
 
 void SendDialog::checkAddr()
 {
+    bool ok = true;
     if (ui->to_edit->hasAcceptableInput()) {
-
         ui->to_edit->setStyleSheet("");
-        ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
+        ok = true;
     } else {
         ui->to_edit->setStyleSheet(error_style);
+        ok = false;
+    }
+
+    if (ui->cc_edit->hasAcceptableInput() || ui->cc_edit->text().size() == 0) {
+        ui->cc_edit->setStyleSheet("");
+        ok = ok && true;
+    } else {
+        ui->cc_edit->setStyleSheet(error_style);
+        ok = false;
+    }
+
+    if (ui->bcc_edit->hasAcceptableInput() || ui->bcc_edit->text().size() == 0) {
+        ui->bcc_edit->setStyleSheet("");
+        ok = ok && true;
+    } else {
+        ui->bcc_edit->setStyleSheet(error_style);
+        ok = false;
+    }
+
+    if (ok) {
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
+    } else {
         ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
     }
 }
