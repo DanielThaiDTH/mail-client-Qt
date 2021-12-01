@@ -12,5 +12,8 @@
         <file>images/write.png</file>
         <file>images/clear.png</file>
         <file>images/search.png</file>
+        <file>images/nothing.png</file>
+        <file>images/rec.png</file>
+        <file>images/clip.png</file>
     </qresource>
 </RCC>

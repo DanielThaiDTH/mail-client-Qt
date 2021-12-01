@@ -31,7 +31,7 @@ void InboxDisplay::setInbox(const QVector<MailSummary>& summary)
     mails = new QVector<InboxItem*>();
 
     for (const MailSummary& sum : summary) {
-        InboxItem* temp = new InboxItem(sum.id, sum.read, sum.subject, sum.sender);
+        InboxItem* temp = new InboxItem(sum.id, sum.read, sum.subject, sum.sender, sum.hasAttach);
         temp->setMaximumHeight(100);
         temp->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         mails->push_back(temp);
@@ -49,6 +49,8 @@ void InboxDisplay::updateRead(int id)
     for (InboxItem*& item : *mails) {
         if (item->getID() == id) {
             item->setReadState(true);
+        } else {
+            item->clearCurrentRead();
         }
     }
 }
@@ -56,6 +58,11 @@ void InboxDisplay::updateRead(int id)
 
 void InboxDisplay::itemClicked(int id)
 {
+    for (InboxItem*& item : *mails) {
+        if (item->getID() != id) {
+            item->clearCurrentRead();
+        }
+    }
     emit mailSelected(id);
 }
 

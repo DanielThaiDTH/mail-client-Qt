@@ -1,6 +1,7 @@
 #include "inboxitem.h"
+#include <iostream>
 
-InboxItem::InboxItem(int id, bool read, QString subject, QString sender, QWidget* parent) : QFrame(parent)
+InboxItem::InboxItem(int id, bool read, QString subject, QString sender, bool hasAttach, QWidget* parent) : QFrame(parent)
 {
     this->setObjectName("inbox-item");
     mail_id = id;
@@ -25,11 +26,30 @@ InboxItem::InboxItem(int id, bool read, QString subject, QString sender, QWidget
 
     sender_label->setStyleSheet(senderStyle);
 
+    read_label = new QLabel("");
+    attach_label = new QLabel("");
+    attach_label->setStyleSheet("* { margin-left: 5px; }");
+
+    read_label->setPixmap(QPixmap(":/images/rec.png"));
+    read_label->setMaximumSize(20, 20);
+    read_label->setScaledContents(true);
+
+    attach_label->setPixmap(QPixmap(":/images/clip.png"));
+    attach_label->setScaledContents(true);
+    attach_label->setMaximumSize(35, 40);
+
     layout = new QHBoxLayout(this);
     layout->addWidget(select_check);
+    layout->addWidget(read_label);
     layout->addWidget(subject_label);
     layout->addWidget(sender_label);
+    layout->addWidget(attach_label);
     this->setLayout(layout);
+
+    read_label->hide();
+
+    if (!hasAttach)
+        attach_label->hide();
 
     style = "InboxItem#inbox-item { background-color: white; border-top: 1px solid #707070; \n";
     style += "border-bottom: 1px solid #707070; margin: 0px; padding: 0px; }\n";
@@ -80,6 +100,7 @@ void InboxItem::mousePressEvent(QMouseEvent* e)
 {
     if (rect().contains(e->pos())) {
         isRead = true;
+        read_label->show();
         subject_label->setStyleSheet(subjectReadStyle);
         emit mailClicked(mail_id);
     }
@@ -95,9 +116,16 @@ int InboxItem::getID() const
 void InboxItem::setReadState(bool state)
 {
     isRead = state;
+    read_label->show();
 
     if (isRead)
         subject_label->setStyleSheet(subjectReadStyle);
     else
         subject_label->setStyleSheet(subjectUnreadStyle);
+}
+
+
+void InboxItem::clearCurrentRead()
+{
+    read_label->hide();
 }

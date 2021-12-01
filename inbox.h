@@ -88,6 +88,7 @@ struct MailSummary
 {
   int id;
   bool read;
+  bool hasAttach;
   QString subject;
   QString sender;
   QString receiveDate;
@@ -95,6 +96,7 @@ struct MailSummary
   {
       this->read = data.read;
       this->id = data.id;
+      hasAttach = data.mail->getAttachments().size() > 0;
       sender = QString::fromStdString(data.mail->getFromAddress());
       subject = QString::fromStdString(data.mail->getSubject());
       receiveDate = QString::fromStdString(data.mail->getReceiveDate());

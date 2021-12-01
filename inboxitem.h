@@ -10,6 +10,8 @@
 #include <QHBoxLayout>
 #include <QEnterEvent>
 #include <QMouseEvent>
+#include <QPixmap>
+#include <QIcon>
 
 class InboxItem : public QFrame
 {
@@ -24,6 +26,8 @@ class InboxItem : public QFrame
     QString sender_addr;
     QLabel* subject_label;
     QLabel* sender_label;
+    QLabel* attach_label;
+    QLabel* read_label;
     QString subjectUnreadStyle = "* { font-weight: bold; font-size: 15px; color: #1D43BF; margin: 0px; }";
     QString subjectReadStyle = "* { font-weight: normal; font-size: 15px; color: #243B88; margin: 0px; }";
     QString senderStyle = "* { font-style: italic; color: #707070; margin: 0px; }";
@@ -32,13 +36,14 @@ class InboxItem : public QFrame
     QHBoxLayout* layout;
 
 public:
-    InboxItem(int id, bool read, QString subject, QString sender, QWidget* parent = nullptr);
+    InboxItem(int id, bool read, QString subject, QString sender, bool hasAttach, QWidget* parent = nullptr);
     ~InboxItem();
     void enterEvent(QEnterEvent* e) override;
     void leaveEvent(QEvent* e) override;
     void mousePressEvent(QMouseEvent* e) override;
     int getID() const;
     void setReadState(bool state);
+    void clearCurrentRead();
 
 public slots:
     void checkChanged(int value);

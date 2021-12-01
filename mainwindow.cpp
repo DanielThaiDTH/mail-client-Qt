@@ -11,11 +11,13 @@ MainWindow::MainWindow(QWidget *parent)
     this->setWindowTitle("Mail Application");
 
     QString writeStyle = "QPushButton { background-color: #E1F1F1; font-size: 18px; height: 45; width: 120; border-radius: 15;";
-    writeStyle += " margin-right: 90px; color: #707070; border: solid; border-width: 1px; border-color: #707070; }\n";
+    writeStyle += " margin-right: 50px; margin-left: 35px; color: #707070; border: solid; border-width: 1px; border-color: #707070; }\n";
     writeStyle += "*:hover { background-color: #B4EBEB; }";
     ui->writeMailButton->setStyleSheet(writeStyle);
+    ui->writeMailButton->setIcon(QPixmap(":/images/write.png"));
+    ui->writeMailButton->setIconSize(QSize(25, 25));
 
-    QString filterStyle = "* { background-color: #BED5F1; font-size: 14px; color:#707070; border-radius: 5; }\n";
+    QString filterStyle = "* { background-color: #BED5F1; font-size: 14px; color:#707070; border-radius: 5; margin-right: 15px; }\n";
     filterStyle += "*:hover { background-color: #A1C6DF; }";
     ui->filterButton->setStyleSheet(filterStyle);
     ui->filterButton->setMinimumHeight(30);
@@ -48,6 +50,7 @@ MainWindow::MainWindow(QWidget *parent)
     scrollArea = new QScrollArea(this);
     scrollArea->setWidget(inbox_frame);
     scrollArea->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+    scrollArea->setWidgetResizable(true);
 
 
     /*Set up the splitter*/
@@ -303,6 +306,11 @@ void MainWindow::searchFilterOpen()
         filter.reset();
         filter.setQuery(ui->lineEdit->text().trimmed());
         inbox_disp->setInbox(inbox->search(filter));
+        ui->filterButton->setIcon(QPixmap(":/images/nothing.png"));
+        ui->filterButton->setIconSize(QSize(0, 0));
+    } else {
+        ui->filterButton->setIcon(QPixmap(":/images/rec.png"));
+        ui->filterButton->setIconSize(QSize(15, 15));
     }
 }
 

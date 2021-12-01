@@ -58,6 +58,11 @@
          <property name="text">
           <string>Write Mail</string>
          </property>
+         <property name="icon">
+          <iconset>
+           <normalon>images/write.png</normalon>
+          </iconset>
+         </property>
         </widget>
        </item>
        <item>
@@ -82,7 +87,7 @@
        <item>
         <widget class="QPushButton" name="filterButton">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+          <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
