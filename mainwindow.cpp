@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -164,9 +165,20 @@ void MainWindow::changeBox(BoxType type)
 
 void MainWindow::writeClicked()
 {
-    SendDialog* send_window = new SendDialog(this);
+    Email* m = nullptr;
+    SendDialog* send_window = new SendDialog(&m, this);
 
-    send_window->exec();
+    int state = send_window->exec();
+
+    if (state == QDialog::Accepted) {
+        m->setFromAddress(inbox->getLocalAddr().toStdString());
+        inbox->addEmail(m, BoxType::SENT);
+    } else {
+        m->setFromAddress(inbox->getLocalAddr().toStdString());
+        inbox->addEmail(m, BoxType::DRAFT);
+    }
+
+    send_window->deleteLater();
 }
 
 
@@ -193,10 +205,16 @@ void MainWindow::openReplyDialog(int id)
     if (id < 0)
         return;
 
-    SendDialog* send_window = new SendDialog(this);
+    Email* m = nullptr;
+    SendDialog* send_window = new SendDialog(&m, this);
     send_window->setReplyMode(inbox->getMailData(id));
 
-    send_window->exec();
+    int state = send_window->exec();
+
+    if (state == QDialog::Accepted) {
+        inbox->addEmail(m, BoxType::SENT);
+    }
+
     send_window->deleteLater();
 }
 

@@ -43,6 +43,7 @@ public:
     };
 
 private:
+    QString local_addr = "local@domain.com";
     QVector<MailData> inbox_mail;
     QVector<MailData> trash_mail;
     QVector<MailData> draft_mail;
@@ -74,6 +75,7 @@ public:
     void setActiveBox(BoxType type);
     QSet<QString>& getTags();
     QSet<QString>& getMailTags(int id);
+    const QString& getLocalAddr() const;
 };
 
 

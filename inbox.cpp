@@ -3,6 +3,7 @@
 #include <utility>
 #include <algorithm>
 #include <cstring>
+#include <iostream>
 
 int Inbox::MailData::id_generator = 0;
 
@@ -376,4 +377,10 @@ QSet<QString>& Inbox::getMailTags(int id)
         return errorMailData.tags;
 
     return data->tags;
+}
+
+
+const QString& Inbox::getLocalAddr() const
+{
+    return local_addr;
 }

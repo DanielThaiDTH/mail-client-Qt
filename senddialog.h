@@ -13,14 +13,21 @@ class SendDialog : public QDialog
 {
     Q_OBJECT
     bool bcc_visible;
+    Email** mail;
+    const Email* reply;
+    QString error_style = "* { background: pink }";
 
 public:
-    explicit SendDialog(QWidget *parent = nullptr);
+    explicit SendDialog(Email** mail, QWidget *parent = nullptr);
     ~SendDialog();
     void setReplyMode(const Inbox::MailData& mail);
+    void makeMail();
 
 public slots:
     void bccClicked();
+    void accept() override;
+    void reject() override;
+    void checkAddr();
 
 private:
     Ui::SendDialog *ui;
