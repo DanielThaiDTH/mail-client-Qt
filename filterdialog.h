@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QDate>
+#include <QAction>
 #include "searchfilter.h"
 
 namespace Ui {
@@ -13,6 +14,8 @@ class FilterDialog : public QDialog
 {
     Q_OBJECT
     SearchFilter* filter;
+    QAction* openFrom;
+    QAction* openTo;
 
 public:
     explicit FilterDialog(SearchFilter* filter, QWidget *parent = nullptr);

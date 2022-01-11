@@ -119,6 +119,18 @@ void MailFrame::updateContent(const Inbox::MailData& data)
 }
 
 
+void MailFrame::setTrashIcon(bool isTrash)
+{
+    if (isTrash) {
+        trash_tool->setIcon(QPixmap(":/images/trash.png"));
+        trash_tool->setToolTip("Send to Trash");
+    } else {
+        trash_tool->setIcon(QPixmap(":/images/restore.png"));
+        trash_tool->setToolTip("Restore to inbox");
+    }
+}
+
+
 void MailFrame::clearContent()
 {
     content_frame->clearContents();

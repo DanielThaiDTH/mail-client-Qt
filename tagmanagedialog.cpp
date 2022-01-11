@@ -16,6 +16,24 @@ TagManageDialog::TagManageDialog(QSet<QString>* tags, QSet<QString>* existing_ta
     ui->listView->setModel(&tag_list);
     ui->listView->setSelectionMode(QAbstractItemView::SingleSelection);
 
+    QString AddStyle = "*:hover { background-color: #00BC4B; }\n";
+    AddStyle += "* { border-radius: 3; background-color: #1FF2A5; color: white; font-weight: bold; font-size: 14px; border: 1px solid #00BC4B;}";
+
+    ui->addExisting->setStyleSheet(AddStyle);
+    ui->addNew->setStyleSheet(AddStyle);
+
+    QString RemoveStyle = "*:hover { background-color: #B80303; }";
+    RemoveStyle += "* { border-radius: 3; background-color: #F72424; color: white; font-weight: bold; font-size: 14px; border: 1px solid #B80303; }";
+
+    ui->remove->setStyleSheet(RemoveStyle);
+
+    QPushButton* ok = ui->buttonBox->button(QDialogButtonBox::Ok);
+    ok->setMinimumHeight(30);
+    QString OKStyle = "* { border-radius: 3; font-size: 14px; padding: 5px 20px 5px 20px;";
+    OKStyle += "background-color: white; font-weight: bold; border: 1px solid #707070; } *:hover { background-color: #C0C0C0; }";
+    ok->setStyleSheet(OKStyle);
+    ok->setText("Back");
+
     connect(ui->remove, &QPushButton::clicked, this, &TagManageDialog::removeTags);
     connect(ui->addExisting, &QPushButton::clicked, this, &TagManageDialog::addTags);
     connect(ui->addNew, &QPushButton::clicked, this, &TagManageDialog::addTags);

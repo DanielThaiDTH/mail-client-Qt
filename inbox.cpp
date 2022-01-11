@@ -319,6 +319,7 @@ void Inbox::removeMail(int id)
     auto data = std::find_if(box->begin(), box->end(), getByID);
 
     if (data != box->end()) {
+        delete data->mail;
         box->erase(data);
     }
 }

@@ -1,6 +1,7 @@
 #include "filterdialog.h"
 #include "ui_filterdialog.h"
 #include <QPushButton>
+#include <QPixmap>
 
 FilterDialog::FilterDialog(SearchFilter* filter, QWidget *parent) :
     QDialog(parent),
@@ -38,6 +39,12 @@ FilterDialog::FilterDialog(SearchFilter* filter, QWidget *parent) :
     ui->textLine->setText(filter->getTextFilter());
     ui->attachCheckBox->setChecked(filter->getAttachmentCheck());
     ui->attachFilterLine->setText(filter->getAttachmentFilter());
+
+    //Date
+    openFrom = new QAction(QPixmap(":/images/cal.png"), "Open calender");
+    openTo = new QAction(QPixmap(":/images/cal.png"), "Open calender");
+    ui->dateFrom->addAction(openFrom, QLineEdit::TrailingPosition);
+    ui->dateTo->addAction(openTo, QLineEdit::TrailingPosition);
 
     connect(ui->toLine, &QLineEdit::textEdited, this, &FilterDialog::toChange);
     connect(ui->fromLine, &QLineEdit::textEdited, this, &FilterDialog::fromChange);

@@ -15,5 +15,7 @@
         <file>images/nothing.png</file>
         <file>images/rec.png</file>
         <file>images/clip.png</file>
+        <file>images/restore.png</file>
+        <file>images/cal.png</file>
     </qresource>
 </RCC>

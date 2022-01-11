@@ -37,6 +37,7 @@ class MailFrame : public QFrame
 
 public:
     MailFrame(QWidget* parent = nullptr);
+    void setTrashIcon(bool isTrash);
     ~MailFrame();
 
 public slots:

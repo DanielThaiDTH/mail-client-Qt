@@ -23,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->filterButton->setMinimumHeight(30);
     ui->filterButton->setMinimumWidth(80);
 
+    ui->lineEdit->setStyleSheet("QLineEdit { border-radius: 10px; border: 1px solid black; }");
 
     /*Set up the inbox frame*/
     QString inboxStyle = "* { background-color: white; }";
@@ -45,7 +46,7 @@ MainWindow::MainWindow(QWidget *parent)
     mail_frame->setObjectName("mail-frame");
     mail_frame->setFrameShape(QFrame::Panel);
     mail_frame->setStyleSheet("QFrame#mail-frame { background-color: #A1C6DF; }");
-    mail_frame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+    mail_frame->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
 
     scrollArea = new QScrollArea(this);
     scrollArea->setWidget(inbox_frame);
@@ -62,6 +63,7 @@ MainWindow::MainWindow(QWidget *parent)
     splitter->setMinimumHeight(650);
     splitter->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     ui->layoutInbox->addWidget(splitter);
+    mail_frame->hide();
 
 
     //Setup mail box selection styles
@@ -211,7 +213,11 @@ void MainWindow::itemClicked(int id)
 
 void MainWindow::trashMail(int id)
 {
-    inbox->moveToTrash(id);
+    if (inbox->getActiveBox() == BoxType::TRASH) {
+        inbox->restoreMail(id);
+    } else {
+        inbox->moveToTrash(id);
+    }
     inbox_disp->setInbox(inbox->getInboxSummary());
     mail_frame->hide();
 }
@@ -320,6 +326,7 @@ void MainWindow::inboxSelected()
     resetButtonStyles();
     changeBox(BoxType::INBOX);
     ui->inbox_button->setStyleSheet(activeBoxStyle);
+    mail_frame->setTrashIcon(true);
 }
 
 void MainWindow::sentSelected()
@@ -341,6 +348,7 @@ void MainWindow::trashSelected()
     resetButtonStyles();
     changeBox(BoxType::TRASH);
     ui->trash_button->setStyleSheet(activeBoxStyle);
+    mail_frame->setTrashIcon(false);
 }
 
 void MainWindow::junkSelected()
